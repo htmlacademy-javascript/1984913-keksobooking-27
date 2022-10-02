@@ -1,28 +1,31 @@
-function getIntegerNum(min, max) {
+const getRandomInteger = (min, max) => {
   if (min < 0 || max < 0) {
     return NaN;
   }
 
-  const startNum = min < max ? min : max;
-  const endNum = min < max ? max : min;
+  const rangeStart = min < max ? min : max;
+  const rangeEnd = min < max ? max : min;
 
-  const resNum = Math.floor(Math.random() * (endNum - startNum + 1) + startNum);
-  return resNum;
-}
+  const randomInteger = Math.floor(
+    Math.random() * (rangeEnd - rangeStart + 1) + rangeStart
+  );
+  return randomInteger;
+};
 
-function getFloatNum(min, max, decimals) {
+const getRandomFloat = (min, max, decimals) => {
   if (min < 0 || max < 0 || decimals < 0) {
     return NaN;
   }
 
-  const startNum = min < max ? min : max;
-  const endNum = min < max ? max : min;
+  const rangeStart = min < max ? min : max;
+  const rangeEnd = min < max ? max : min;
 
-  const resNum = (Math.random() * (endNum - startNum) + startNum).toFixed(
-    decimals
-  );
-  return +resNum;
-}
+  const randomFloat = (
+    Math.random() * (rangeEnd - rangeStart) +
+    rangeStart
+  ).toFixed(decimals);
+  return +randomFloat;
+};
 
-getIntegerNum(1, 10);
-getFloatNum(1.1, 2.5, 3);
+getRandomInteger(1, 10);
+getRandomFloat(1.1, 2.5, 3);
