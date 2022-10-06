@@ -12,6 +12,7 @@ const LOCATION_COORDINATES = {
   lat:{ min:35.65000 , max:35.70000},
   lng:{ min:139.70000 , max:139.80000}
 };
+const freeAvatars = [];
 
 const getRandomPositiveInteger = (min, max) => {
   if (min < 0 || max < 0) {
@@ -48,14 +49,26 @@ const getRandomCoordinates = (coordinates) => {
   return {lat:latitude, lng:longitude};
 };
 
-const getRandomAvatar = (max) => {
-  let avatarIndex = getRandomPositiveInteger(1,max);
+const getRandomUniqueAvatar = (max) => {
+
+  if (freeAvatars.length === 0) {
+    for (let i = 0; i < max; i++) {
+      const start = 1;
+      freeAvatars.push(start + i);
+    }
+  }
+  const randomIndex = getRandomPositiveInteger(1,freeAvatars.length - 1);
+  let avatarIndex = freeAvatars[randomIndex];
+
   if(avatarIndex < 10) {
     avatarIndex = `0${avatarIndex}`;
   }
+
   const avatarSource = `img/avatars/user${avatarIndex}.png`;
+  freeAvatars.splice(randomIndex, 1);
   return avatarSource;
 };
+
 
 const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
 
@@ -93,7 +106,7 @@ const createAdvertisement = () => {
   const coordinates = getRandomCoordinates(LOCATION_COORDINATES);
   return {
     author:{
-      avatar:`${getRandomAvatar(AVATARS_AMOUNT)}`
+      avatar:`${getRandomUniqueAvatar(AVATARS_AMOUNT)}`
     },
     offer:getRandomOffer(coordinates),
     location:coordinates,
