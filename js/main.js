@@ -1,6 +1,6 @@
 const ADVERTISMENTS_AMOUNT = 10;
 const AVATARS_AMOUNT = 10;
-const PRICES = {min:0 , max:100000};
+const Prices = {MIN:0 , MAX:100000};
 const TYPES = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
 const ROOMS_MAX_AMOUNT = 10;
 const GUESTS_MAX_AMOUNT = 10;
@@ -8,9 +8,9 @@ const CHECKIN_HOURS = ['12:00','13:00', '14:00'];
 const CHECKOUT_HOURS = ['12:00','13:00', '14:00'];
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 const PHOTOS = ['https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'];
-const LOCATION_COORDINATES = {
-  lat:{ min:35.65000 , max:35.70000},
-  lng:{ min:139.70000 , max:139.80000}
+const LocationCoordinates = {
+  LAT:{ MIN:35.65000 , MAX:35.70000},
+  LNG:{ MIN:139.70000 , MAX:139.80000}
 };
 const freeAvatars = [];
 
@@ -44,8 +44,8 @@ const getRandomPositiveFloat = (min, max, decimals) => {
 };
 
 const getRandomCoordinates = (coordinates) => {
-  const latitude = getRandomPositiveFloat(coordinates.lat.min, coordinates.lat.max, 5);
-  const longitude = getRandomPositiveFloat(coordinates.lng.min, coordinates.lng.max, 5);
+  const latitude = getRandomPositiveFloat(coordinates.LAT.MIN, coordinates.LAT.MAX, 5);
+  const longitude = getRandomPositiveFloat(coordinates.LNG.MIN, coordinates.LNG.MAX, 5);
   return {lat:latitude, lng:longitude};
 };
 
@@ -69,41 +69,40 @@ const getRandomUniqueAvatar = (max) => {
   return avatarSource;
 };
 
+const getRandomArrayItem = (items) => items[getRandomPositiveInteger(0, items.length - 1)];
 
-const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
+const getRandomSelectionItems = (items) => {
+  const randomSelectionLength = getRandomPositiveInteger(1, items.length);
+  const randomSelectionItems = [];
 
-const getRandomSelectionArray = (elements) => {
-  const randomSelectionLength = getRandomPositiveInteger(1, elements.length);
-  const randomSelectionArray = [];
+  while (randomSelectionItems.length < randomSelectionLength) {
+    const randomItemIndex = getRandomPositiveInteger(0, items.length - 1);
+    const randomItem = items[randomItemIndex];
 
-  while (randomSelectionArray.length < randomSelectionLength) {
-    const randomElementIndex = getRandomPositiveInteger(0, elements.length - 1);
-    const randomElement = elements[randomElementIndex];
-
-    if (!randomSelectionArray.includes(randomElement)) {
-      randomSelectionArray.push(randomElement);
+    if (!randomSelectionItems.includes(randomItem)) {
+      randomSelectionItems.push(randomItem);
     }
   }
-  return randomSelectionArray;
+  return randomSelectionItems;
 };
 
 const getRandomOffer = (coordinates) =>({
   title:'Уютный дом',
   address:`${coordinates.lat }, ${ coordinates.lng}`,
-  price: getRandomPositiveInteger(PRICES.min, PRICES.max),
-  type: getRandomArrayElement(TYPES),
+  price: getRandomPositiveInteger(Prices.MIN, Prices.MAX),
+  type: getRandomArrayItem(TYPES),
   rooms:getRandomPositiveInteger(1, ROOMS_MAX_AMOUNT),
   guests: getRandomPositiveInteger(1, GUESTS_MAX_AMOUNT),
-  checkin:getRandomArrayElement(CHECKIN_HOURS),
-  checkout:getRandomArrayElement(CHECKOUT_HOURS),
-  features:getRandomSelectionArray(FEATURES),
+  checkin:getRandomArrayItem(CHECKIN_HOURS),
+  checkout:getRandomArrayItem(CHECKOUT_HOURS),
+  features:getRandomSelectionItems(FEATURES),
   description:'Современный дизайн',
-  photos:getRandomSelectionArray(PHOTOS),
+  photos:getRandomSelectionItems(PHOTOS),
 });
 
 
 const createAdvertisement = () => {
-  const coordinates = getRandomCoordinates(LOCATION_COORDINATES);
+  const coordinates = getRandomCoordinates(LocationCoordinates);
   return {
     author:{
       avatar:`${getRandomUniqueAvatar(AVATARS_AMOUNT)}`
