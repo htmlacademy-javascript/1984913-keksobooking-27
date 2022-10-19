@@ -33,7 +33,7 @@ const getRandomUniqueAvatar = (max) => {
 
 
   const randomIndex = getRandomPositiveInteger(1, freeAvatars.length - 1);
-  let avatarIndex = freeAvatars[randomIndex];
+  let avatarIndex = freeAvatars[randomIndex] || freeAvatars[0];
 
   if(avatarIndex < 10) {
     avatarIndex = `0${avatarIndex}`;
