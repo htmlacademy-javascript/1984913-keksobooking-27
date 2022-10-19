@@ -1,6 +1,6 @@
 import {createPropertyAdvertisements} from'./advertisements-data.js';
 
-const propertyTypes = {
+const PropertyType = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
   house: 'Дом',
@@ -57,7 +57,7 @@ const renderAdvertisements = ()=>{
     advertisementItem.querySelector('.popup__title').textContent = offer.title;
     advertisementItem.querySelector('.popup__text--address').textContent = offer.address;
     advertisementItem.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
-    advertisementItem.querySelector('.popup__type').textContent = propertyTypes[offer.type];
+    advertisementItem.querySelector('.popup__type').textContent = PropertyType[offer.type];
     advertisementItem.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
     advertisementItem.querySelector('.popup__text--time').textContent = ` Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
     advertisementItem.querySelector('.popup__description').textContent = offer.description;
