@@ -1,3 +1,5 @@
-import './card.js';
-import './form.js';
-import './map.js';
+import {createAdverts} from'./advertisements-data.js';
+import {renderAdverts} from'./map.js';
+
+const adverts = createAdverts();
+renderAdverts(adverts);

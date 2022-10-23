@@ -23,7 +23,6 @@ const getRandomCoordinates = (coordinates) => {
 };
 
 const getRandomUniqueAvatar = (max) => {
-
   if (freeAvatars.length === 0) {
     for (let i = 0; i < max; i++) {
       const start = 1;
@@ -58,7 +57,7 @@ const getRandomOffer = (coordinates) =>({
 });
 
 
-const createAdvertisement = () => {
+const createAdvert = () => {
   const coordinates = getRandomCoordinates(LocationCoordinate);
   return {
     author:{
@@ -69,6 +68,6 @@ const createAdvertisement = () => {
   };
 };
 
-const createPropertyAdvertisements = () => Array.from({length:ADVERTISMENTS_AMOUNT}, createAdvertisement);
+const createAdverts = () => Array.from({length:ADVERTISMENTS_AMOUNT}, createAdvert);
 
-export {createPropertyAdvertisements};
+export {createAdverts};
