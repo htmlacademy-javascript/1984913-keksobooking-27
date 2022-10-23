@@ -1,8 +1,5 @@
-import './util.js';
-import {createPropertyAdvertisements} from'./asvertisements-data.js';
-import './form.js';
-import './map.js';
+import {createAdverts} from'./advertisements-data.js';
+import {renderAdverts} from'./map.js';
 
-
-// eslint-disable-next-line no-console
-console.log(createPropertyAdvertisements());
+const adverts = createAdverts();
+renderAdverts(adverts);
