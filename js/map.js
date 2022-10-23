@@ -1,23 +1,35 @@
 import { createCard } from './card.js';
-import {handleFormState} from'./form.js';
+import { activateFilters, disableFilters } from './map-filters.js';
+import { activateForm, disableForm } from './form.js';
 
 const mapBlock = document.querySelector('#map-canvas');
 
-const isLoaded = false;
+const isLoaded = true;
 
 const renderAdverts = (adverts) => {
-  const cards = [];
-  adverts.forEach((advert) => {
-    const card = createCard(advert);
-    cards.push(card);
-  });
+  if(isLoaded){
+    const cards = [];
+    adverts.forEach((advert) => {
+      const card = createCard(advert);
+      cards.push(card);
+    });
 
-  mapBlock.append(...cards);
+    mapBlock.append(...cards);
+  }
 };
 
 
-handleFormState(isLoaded);
+const handleFormsState = (status)=>{
+  if(!status){
+    disableForm();
+    disableFilters();
+  }else{
+    activateForm();
+    activateFilters();
+  }
+};
 
+handleFormsState(isLoaded);
 
 export {
   renderAdverts
