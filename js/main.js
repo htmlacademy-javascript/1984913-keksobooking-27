@@ -4,7 +4,7 @@ import {renderAdverts} from'./map.js';
 import { activateFilters, disableFilters } from './map-filters.js';
 import { activateForm, disableForm } from './form.js';
 
-const isLoaded = false;
+const isLoaded = true;
 const adverts = createAdverts();
 
 const handlePageState = (status)=>{
