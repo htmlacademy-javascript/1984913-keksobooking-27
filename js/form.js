@@ -21,6 +21,9 @@ const priceField = advertForm.querySelector('#price');
 
 
 addressField.readOnly = true;
+priceField.placeholder = typeToMinPrice[typeField.value];
+
+typeField.addEventListener('change', (evt)=>{ priceField.placeholder = typeToMinPrice[evt.target.value];});
 
 const disableForm = ()=>{
   advertForm.classList.add('ad-form--disabled');
@@ -46,24 +49,23 @@ const pristine = new Pristine(advertForm, {
 
 
 const validateRoomsCapacity = ()=>{
-  const roomsNumber = roomsField.value;
-  const capacityNumber = capacityField.value;
-  const isValid = capacityNumber <= roomsMaxCapacity[roomsNumber];
-  return isValid;
+  const rooms = +roomsField.value;
+  const capacity = +capacityField.value;
+  return capacity <= roomsMaxCapacity[rooms];
+
 };
 
 const getCapacityError = ()=>{
-  const roomsNumber = roomsField.value;
-  const capacityError = roomsMaxCapacity[roomsNumber] !== 0 ? `Количество не может превышать
-  ${roomsMaxCapacity[roomsNumber]}` : 'Не предусмотрено для гостей';
-  return capacityError;
+  const rooms = +roomsField.value;
+  return roomsMaxCapacity[rooms] > 0
+    ? `Количество не может превышать  ${roomsMaxCapacity[rooms]}`
+    : 'Не предусмотрено для гостей';
 };
 
 const validatePrice = ()=>{
   const type = typeField.value;
-  const price = priceField.value;
-  const isValid = price >= typeToMinPrice[type];
-  return isValid;
+  const price = +priceField.value;
+  return price >= typeToMinPrice[type];
 };
 
 const getPriceError = ()=>{
