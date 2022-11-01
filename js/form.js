@@ -1,4 +1,6 @@
 import {createSlider, updateSliderValues,updateHandlePlace, handlePrice} from './slider.js';
+import {resetFilters} from './map-filters.js';
+import {resetMap} from './map.js';
 const advertForm = document.querySelector('.ad-form');
 const fields = advertForm.querySelectorAll('fieldset');
 const addressField = advertForm.querySelector('#address');
@@ -20,7 +22,6 @@ const roomsField = advertForm.querySelector('#room_number');
 const capacityField = advertForm.querySelector('#capacity');
 const typeField = advertForm.querySelector('#type');
 const priceField = advertForm.querySelector('#price');
-
 
 addressField.readOnly = true;
 priceField.placeholder = typeToMinPrice[typeField.value];
@@ -88,13 +89,20 @@ const getPriceError = ()=>{
 pristine.addValidator(capacityField, validateRoomsCapacity, getCapacityError);
 pristine.addValidator(priceField, validatePrice, getPriceError);
 
+const setDefaultStatus = ()=>{
+  updateHandlePlace(typeToMinPrice[typeField.value]);
+  resetMap();
+  resetFilters();
+};
+
 advertForm.addEventListener('submit', (evt)=>{
   evt.preventDefault();
   pristine.validate();
-  updateHandlePlace(typeToMinPrice[typeField.value]);
+  setDefaultStatus();
 });
+
 advertForm.addEventListener('reset', ()=>{
-  updateHandlePlace(typeToMinPrice[typeField.value]);
+  setDefaultStatus();
 });
 
 export {activateForm, disableForm};

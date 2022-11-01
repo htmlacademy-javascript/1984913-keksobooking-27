@@ -1,10 +1,8 @@
 import {createAdverts} from'./advertisements-data.js';
-import {renderAdverts} from'./map.js';
-
-import { activateFilters, disableFilters } from './map-filters.js';
+import {renderAdverts, isLoaded} from'./map.js';
 import { activateForm, disableForm } from './form.js';
+import { activateFilters, disableFilters } from './map-filters.js';
 
-const isLoaded = true;
 const adverts = createAdverts();
 
 const handlePageState = (status)=>{
