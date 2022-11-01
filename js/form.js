@@ -91,6 +91,10 @@ pristine.addValidator(priceField, validatePrice, getPriceError);
 advertForm.addEventListener('submit', (evt)=>{
   evt.preventDefault();
   pristine.validate();
+  updateHandlePlace(typeToMinPrice[typeField.value]);
+});
+advertForm.addEventListener('reset', ()=>{
+  updateHandlePlace(typeToMinPrice[typeField.value]);
 });
 
 export {activateForm, disableForm};
