@@ -36,5 +36,8 @@ const updateSliderValues = (min, max)=>{
   updateHandlePlace(min);
 };
 
+const disableSlider = ()=>{
+  slider.setAttribute('disabled', true);
+};
 
-export {createSlider,updateSliderValues,updateHandlePlace,handlePrice};
+export {createSlider,updateSliderValues,updateHandlePlace,handlePrice,disableSlider};

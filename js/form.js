@@ -1,4 +1,4 @@
-import {createSlider, updateSliderValues,updateHandlePlace, handlePrice} from './slider.js';
+import {createSlider, updateSliderValues,updateHandlePlace, handlePrice, disableSlider} from './slider.js';
 import {resetFilters} from './map-filters.js';
 import {resetMap} from './map.js';
 const advertForm = document.querySelector('.ad-form');
@@ -22,11 +22,15 @@ const roomsField = advertForm.querySelector('#room_number');
 const capacityField = advertForm.querySelector('#capacity');
 const typeField = advertForm.querySelector('#type');
 const priceField = advertForm.querySelector('#price');
-
+const defaultType = typeField.options[typeField.selectedIndex].value;
 addressField.readOnly = true;
-priceField.placeholder = typeToMinPrice[typeField.value];
-createSlider(typeToMinPrice[typeField.value], MAX_PRICE);
+
+priceField.placeholder = typeToMinPrice[defaultType];
+createSlider(typeToMinPrice[defaultType], MAX_PRICE);
+
+
 handlePrice(priceField);
+
 
 const handleTypeChange = (evt) =>{
   priceField.placeholder = typeToMinPrice[evt.target.value];
@@ -42,6 +46,7 @@ const disableForm = ()=>{
   fields.forEach((field)=>{
     field.disabled = true;
   });
+  disableSlider();
   advertForm.reset();
 };
 
@@ -93,6 +98,7 @@ const setDefaultStatus = ()=>{
   updateHandlePlace(typeToMinPrice[typeField.value]);
   resetMap();
   resetFilters();
+  priceField.placeholder = typeToMinPrice[defaultType];
 };
 
 advertForm.addEventListener('submit', (evt)=>{
@@ -103,6 +109,7 @@ advertForm.addEventListener('submit', (evt)=>{
 
 advertForm.addEventListener('reset', ()=>{
   setDefaultStatus();
+
 });
 
 export {activateForm, disableForm};
