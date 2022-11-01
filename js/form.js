@@ -18,12 +18,21 @@ const roomsField = advertForm.querySelector('#room_number');
 const capacityField = advertForm.querySelector('#capacity');
 const typeField = advertForm.querySelector('#type');
 const priceField = advertForm.querySelector('#price');
-
+const timeInField = advertForm.querySelector('#timein');
+const timeOutField = advertForm.querySelector('#timeout');
 
 addressField.readOnly = true;
 priceField.placeholder = typeToMinPrice[typeField.value];
 
 typeField.addEventListener('change', (evt)=>{ priceField.placeholder = typeToMinPrice[evt.target.value];});
+
+timeInField.addEventListener('change', () => {
+  timeOutField.value = timeInField.value;
+});
+
+timeOutField.addEventListener('change', () => {
+  timeInField.value = timeOutField.value;
+});
 
 const disableForm = ()=>{
   advertForm.classList.add('ad-form--disabled');
