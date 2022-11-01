@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const advertForm = document.querySelector('.ad-form');
 const fields = advertForm.querySelectorAll('fieldset');
 const addressField = advertForm.querySelector('#address');
