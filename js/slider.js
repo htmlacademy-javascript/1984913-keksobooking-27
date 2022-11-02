@@ -1,24 +1,28 @@
 const slider = document.querySelector('.ad-form__slider');
+const priceField = document.querySelector('#price');
+
 
 const createSlider = (min, max)=>{
   noUiSlider.create(slider,{
     range:{
-      min:min,
-      max:max
+      min,
+      max
     },
     start:min,
     step:1,
     connect: 'lower',
     format:{
-      to:(value)=>value.toFixed(0),
-      from: (value)=>parseFloat(value).toFixed(0)
+      to(value){
+        return value.toFixed(0);
+      },
+      from(value){
+        return parseFloat(value).toFixed(0);
+      }
     }
   });
-};
 
-const handlePrice = (price) =>{
-  slider.noUiSlider.on('update', ()=>{
-    price.value = slider.noUiSlider.get();
+  slider.noUiSlider.on('slide', ()=>{
+    priceField.value = slider.noUiSlider.get();
   });
 };
 
@@ -26,7 +30,7 @@ const updateHandlePlace = (value)=>{
   slider.noUiSlider.set(value);
 };
 
-const updateSliderValues = (min, max)=>{
+const updateSliderValues = (min,max)=>{
   slider.noUiSlider.updateOptions({
     range:{
       min:min,
@@ -37,7 +41,10 @@ const updateSliderValues = (min, max)=>{
 };
 
 const disableSlider = ()=>{
+  //  Перевод в неактивное состояние по noUiSlider документации
   slider.setAttribute('disabled', true);
 };
 
-export {createSlider,updateSliderValues,updateHandlePlace,handlePrice,disableSlider};
+
+export {createSlider,updateSliderValues,updateHandlePlace,disableSlider};
+

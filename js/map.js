@@ -1,84 +1,91 @@
 import { createCard } from './card.js';
 
-const coordinates = {
-  lat:35.66565,
-  lng: 139.76102,
-  toString: function() {
-    return `lat:${this.lat}, lng:${this.lng}`;
-  }
-};
-const addressField = document.querySelector('#address');
-let isLoaded = false;
-
-const handleAddress = ()=>{
-  addressField.defaultValue = coordinates.toString();
-};
-
-const map = L.map('map-canvas').on('load',()=>{
-  isLoaded = true;
-  handleAddress();
-}).setView({
-  lat:35.66565,
-  lng: 139.76102
-},15);
-
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  },
-).addTo(map);
-
-const mainPinIcon = L.icon({
+const MAIN_PIN_ICON = L.icon({
   iconUrl:'../img/main-pin.svg',
   iconSize:[52,52],
   iconAnchor:[26,52],
 });
-
-const pinIcon = L.icon({
+const PIN_ICON = L.icon({
   iconUrl:'../img/pin.svg',
   iconSize:[40,40],
   iconAnchor:[20,40],
 });
+const ZOOM = 15;
+const TokyoCenter = {
+  LAT:35.66565,
+  LNG:139.76102,
+  toString(){
+    return`${this.LAT}, ${this.LNG}`;
+  },
+};
+const coordinates = Object.assign({}, TokyoCenter);
 
-const mainPin = L.marker({
-  lat:35.66565,
-  lng: 139.76102
-}, {
-  draggable:true,
-  icon:mainPinIcon
-});
+const addressField = document.querySelector('#address');
 
-mainPin.addTo(map);
-
-const setCoordinates = (val)=>{
-  coordinates.lat = val.lat.toFixed(5);
-  coordinates.lng = val.lng.toFixed(5);
+const handleAddress = ()=>{
+  addressField.value = coordinates.toString();
 };
 
-mainPin.on('moveend', (evt) => {
-  setCoordinates(evt.target.getLatLng());
-  addressField.value = coordinates.toString();
-
+const mainPin = L.marker({
+  lat:TokyoCenter.LAT,
+  lng: TokyoCenter.LNG
+}, {
+  draggable:true,
+  icon:MAIN_PIN_ICON
 });
 
-const pinsLayer = L.layerGroup().addTo(map);
+let map;
+let pinsLayer;
+
+const createPinsLayer = ()=>{
+  pinsLayer = L.layerGroup().addTo(map);
+};
+
+const renderMap = ()=>{
+  map = L.map('map-canvas').on('load',()=>{
+    handleAddress();
+  }).setView({
+    lat:TokyoCenter.LAT,
+    lng:TokyoCenter.LNG
+  },ZOOM);
+
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    },
+  ).addTo(map);
+
+  mainPin.addTo(map);
+  createPinsLayer();
+  return map['_loaded'] || false;
+};
+
+
+const setCoordinates = (value)=>{
+  coordinates.LAT = value.lat.toFixed(5);
+  coordinates.LNG = value.lng.toFixed(5);
+};
+
+
+mainPin.on('move', (evt) => {
+  setCoordinates(evt.target.getLatLng());
+  addressField.value = coordinates.toString();
+});
 
 const createPin = (lat, lng, card)=>{
   const pin = L.marker({
     lat,
     lng
   },{
-    icon:pinIcon
+    icon:PIN_ICON
   });
   pin.addTo(pinsLayer).bindPopup(card);
 };
 
 const renderAdverts = (adverts) => {
-  const cards = [];
   adverts.forEach((advert) => {
     const card = createCard(advert);
-    cards.push(card);
     const {lat, lng} = advert.location;
     createPin(lat, lng, card);
   });
@@ -86,19 +93,19 @@ const renderAdverts = (adverts) => {
 
 const resetMap = ()=>{
   mainPin.setLatLng({
-    lat:35.66565,
-    lng: 139.76102
+    lat:TokyoCenter.LAT,
+    lng:TokyoCenter.LNG
   });
-  map.closePopup();
-  map.on('load', ()=>{handleAddress();}).setView({
-    lat:35.66565,
-    lng: 139.76102
-  },15);
+  if(map){
+    map.closePopup();
+    map.setView({
+      lat:TokyoCenter.LAT,
+      lng:TokyoCenter.LNG
+    },ZOOM);}
 };
 
 export {
   renderAdverts,
-  isLoaded,
+  renderMap,
   resetMap
 };
-

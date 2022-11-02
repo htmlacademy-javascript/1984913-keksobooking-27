@@ -1,9 +1,8 @@
-import {createSlider, updateSliderValues,updateHandlePlace, handlePrice, disableSlider} from './slider.js';
+import {createSlider, updateSliderValues,updateHandlePlace, disableSlider} from './slider.js';
 import {resetFilters} from './map-filters.js';
 import {resetMap} from './map.js';
-const advertForm = document.querySelector('.ad-form');
-const fields = advertForm.querySelectorAll('fieldset');
-const addressField = advertForm.querySelector('#address');
+
+const MAX_PRICE = 100000;
 const roomsMaxCapacity = {
   1: 1,
   2: 2,
@@ -17,29 +16,40 @@ const typeToMinPrice = {
   house: 5000,
   palace: 10000,
 };
-const MAX_PRICE = 100000;
+const advertForm = document.querySelector('.ad-form');
+const fields = advertForm.querySelectorAll('fieldset');
+const addressField = advertForm.querySelector('#address');
 const roomsField = advertForm.querySelector('#room_number');
 const capacityField = advertForm.querySelector('#capacity');
 const typeField = advertForm.querySelector('#type');
-const priceField = advertForm.querySelector('#price');
 const defaultType = typeField.options[typeField.selectedIndex].value;
+const priceField = advertForm.querySelector('#price');
+const timeInField = advertForm.querySelector('#timein');
+const timeOutField = advertForm.querySelector('#timeout');
+
 addressField.readOnly = true;
 
 priceField.placeholder = typeToMinPrice[defaultType];
-createSlider(typeToMinPrice[defaultType], MAX_PRICE);
-
-
-handlePrice(priceField);
-
+createSlider(typeToMinPrice[defaultType],MAX_PRICE);
 
 const handleTypeChange = (evt) =>{
   priceField.placeholder = typeToMinPrice[evt.target.value];
-  updateSliderValues(typeToMinPrice[evt.target.value], MAX_PRICE);
+  updateSliderValues( typeToMinPrice[evt.target.value],MAX_PRICE);
 };
 
 typeField.addEventListener('change', (evt)=>handleTypeChange(evt));
 
-priceField.addEventListener('change', (evt)=>updateHandlePlace(evt.target.value));
+priceField.addEventListener('change', (evt)=>{
+  updateHandlePlace(evt.target.value);
+});
+
+timeInField.addEventListener('change', () => {
+  timeOutField.value = timeInField.value;
+});
+
+timeOutField.addEventListener('change', () => {
+  timeInField.value = timeOutField.value;
+});
 
 const disableForm = ()=>{
   advertForm.classList.add('ad-form--disabled');
@@ -109,7 +119,6 @@ advertForm.addEventListener('submit', (evt)=>{
 
 advertForm.addEventListener('reset', ()=>{
   setDefaultStatus();
-
 });
 
 export {activateForm, disableForm};
