@@ -1,13 +1,16 @@
 const filtersForm = document.querySelector('.map__filters');
 const filters = filtersForm.querySelectorAll('fieldset, select');
 
+const resetFilters = ()=>{
+  filtersForm.reset();
+};
+
 const disableFilters = ()=>{
   filtersForm.classList.add('map__filters--disabled');
   filters.forEach((filter)=>{
     filter.disabled = true;
   });
-  filtersForm.reset();
-
+  resetFilters();
 };
 
 const activateFilters = ()=>{
@@ -17,4 +20,5 @@ const activateFilters = ()=>{
   });
 };
 
-export {activateFilters, disableFilters};
+
+export {resetFilters, activateFilters, disableFilters};

@@ -1,22 +1,21 @@
 import {createAdverts} from'./advertisements-data.js';
-import {renderAdverts} from'./map.js';
-
-import { activateFilters, disableFilters } from './map-filters.js';
+import {renderAdverts, renderMap} from'./map.js';
 import { activateForm, disableForm } from './form.js';
+import { activateFilters, disableFilters } from './map-filters.js';
 
-const isLoaded = true;
 const adverts = createAdverts();
+disableForm();
+disableFilters();
 
-const handlePageState = (status)=>{
-  if(!status){
-    disableForm();
-    disableFilters();
-  }else{
+const mapLoaded = renderMap();
+
+const handleActiveState = (status)=>{
+  if(status){
     activateForm();
     activateFilters();
-    renderAdverts(adverts);
-  }
+    renderAdverts(adverts);}
 };
 
-handlePageState(isLoaded);
+handleActiveState(mapLoaded);
+
 
