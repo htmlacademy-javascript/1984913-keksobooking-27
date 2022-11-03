@@ -3,7 +3,7 @@ import {resetFilters} from './map-filters.js';
 import {resetMap} from './map.js';
 
 const MAX_PRICE = 100000;
-const roomsMaxCapacity = {
+const roomsToMaxCapacity = {
   1: 1,
   2: 2,
   3: 3,
@@ -78,14 +78,14 @@ const pristine = new Pristine(advertForm, {
 const validateRoomsCapacity = ()=>{
   const rooms = +roomsField.value;
   const capacity = +capacityField.value;
-  return capacity <= roomsMaxCapacity[rooms];
+  return capacity <= roomsToMaxCapacity[rooms];
 
 };
 
 const getCapacityError = ()=>{
   const rooms = +roomsField.value;
-  return roomsMaxCapacity[rooms] > 0
-    ? `Количество не может превышать  ${roomsMaxCapacity[rooms]}`
+  return roomsToMaxCapacity[rooms] > 0
+    ? `Количество не может превышать  ${roomsToMaxCapacity[rooms]}`
     : 'Не предусмотрено для гостей';
 };
 
@@ -113,8 +113,10 @@ const setDefaultStatus = ()=>{
 
 advertForm.addEventListener('submit', (evt)=>{
   evt.preventDefault();
-  pristine.validate();
-  setDefaultStatus();
+  const isValid = pristine.validate();
+  if(isValid){
+    setDefaultStatus();
+  }
 });
 
 advertForm.addEventListener('reset', ()=>{
