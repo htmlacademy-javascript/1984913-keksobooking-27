@@ -14,16 +14,13 @@ const ZOOM = 15;
 const TokyoCenter = {
   LAT:35.66565,
   LNG:139.76102,
-  toString(){
-    return`${this.LAT}, ${this.LNG}`;
-  },
+
 };
-const coordinates = Object.assign({}, TokyoCenter);
 
 const addressField = document.querySelector('#address');
 
-const handleAddress = ()=>{
-  addressField.value = coordinates.toString();
+const handleAddress = (lat, lng)=>{
+  addressField.value = `${lat}, ${lng}`;
 };
 
 const mainPin = L.marker({
@@ -43,7 +40,7 @@ const createPinsLayer = ()=>{
 
 const renderMap = ()=>{
   map = L.map('map-canvas').on('load',()=>{
-    handleAddress();
+    handleAddress(TokyoCenter.LAT,TokyoCenter.LNG );
   }).setView({
     lat:TokyoCenter.LAT,
     lng:TokyoCenter.LNG
@@ -61,16 +58,15 @@ const renderMap = ()=>{
   return map['_loaded'] || false;
 };
 
-
-const setCoordinates = (value)=>{
-  coordinates.LAT = value.lat.toFixed(5);
-  coordinates.LNG = value.lng.toFixed(5);
+const formatCoordinates = ({lat, lng})=>{
+  const formatedLat = lat.toFixed(5);
+  const formatedLng = lng.toFixed(5);
+  return {lat:formatedLat, lng:formatedLng};
 };
 
-
 mainPin.on('move', (evt) => {
-  setCoordinates(evt.target.getLatLng());
-  addressField.value = coordinates.toString();
+  const coordinates = formatCoordinates(evt.target.getLatLng());
+  handleAddress(coordinates.lat,coordinates.lng );
 });
 
 const createPin = (lat, lng, card)=>{
