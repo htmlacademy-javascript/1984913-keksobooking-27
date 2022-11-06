@@ -1048,3 +1048,17 @@ fieldset {
 .hidden {
   display: none;
 }
+
+.server-error{
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  align-items: center;
+  margin-top: 30px;
+  padding: 10px;
+  color: #ff5635;
+  border: 2px solid #ff5635;
+}
+.server-error>p{
+  margin: 5px 0;
+}

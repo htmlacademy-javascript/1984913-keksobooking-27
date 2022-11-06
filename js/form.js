@@ -1,6 +1,7 @@
 import {createSlider, updateSliderValues,updateHandlePlace, disableSlider} from './slider.js';
 import {resetFilters} from './map-filters.js';
 import {resetMap} from './map.js';
+import {sendForm} from './server.js';
 
 const MAX_PRICE = 100000;
 const roomsToMaxCapacity = {
@@ -26,6 +27,7 @@ const defaultType = typeField.options[typeField.selectedIndex].value;
 const priceField = advertForm.querySelector('#price');
 const timeInField = advertForm.querySelector('#timein');
 const timeOutField = advertForm.querySelector('#timeout');
+const submitButton = advertForm.querySelector('button[type=submit]');
 
 addressField.readOnly = true;
 
@@ -104,6 +106,16 @@ const getPriceError = ()=>{
 pristine.addValidator(capacityField, validateRoomsCapacity, getCapacityError);
 pristine.addValidator(priceField, validatePrice, getPriceError);
 
+const blockSubmit = ()=>{
+  submitButton.disable = true;
+  submitButton.textContent = 'Отправка...';
+};
+
+const unblockSubmit = ()=>{
+  submitButton.disable = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
 const setDefaultStatus = ()=>{
   updateHandlePlace(typeToMinPrice[typeField.value]);
   resetMap();
@@ -115,6 +127,9 @@ advertForm.addEventListener('submit', (evt)=>{
   evt.preventDefault();
   const isValid = pristine.validate();
   if(isValid){
+    blockSubmit();
+    const formData = new FormData(evt.target);
+    sendForm(formData,unblockSubmit);
     setDefaultStatus();
   }
 });
