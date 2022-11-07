@@ -8,22 +8,24 @@ const showLoadError = (error)=>{
   loadError.classList.remove('visually-hidden');
 };
 
-const onMessageClick = ()=>{
+const closeMessage = ()=>{
   currentMessage.remove();
-  document.removeEventListener('click', onMessageClick);
+  // document.removeEventListener('click', onMessageClick);
+  // document.removeEventListener('keydown', onMessageEscKeydown);
+};
+
+const onMessageClick = ()=>{
+  closeMessage();
 };
 
 const onMessageEscKeydown = (evt)=>{
   if(evt.key === 'Escape'){
-    currentMessage.remove();
-    document.removeEventListener('keydown', onMessageEscKeydown);
+    closeMessage();
   }
 };
 
 const onErrorButtonClick = ()=>{
-  currentMessage.remove();
-  document.removeEventListener('click', onMessageClick);
-  document.removeEventListener('keydown', onMessageEscKeydown);
+  closeMessage();
 };
 
 const showFormMessage = (type)=>{
