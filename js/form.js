@@ -108,16 +108,17 @@ pristine.addValidator(capacityField, validateRoomsCapacity, getCapacityError);
 pristine.addValidator(priceField, validatePrice, getPriceError);
 
 const blockSubmit = ()=>{
-  submitButton.disable = true;
+  submitButton.disabled = true;
   submitButton.textContent = 'Отправка...';
 };
 
 const unblockSubmit = ()=>{
-  submitButton.disable = false;
+  submitButton.disabled = false;
   submitButton.textContent = 'Опубликовать';
 };
 
 const setDefaultStatus = ()=>{
+  advertForm.reset();
   updateHandlePlace(typeToMinPrice[typeField.value]);
   resetMap();
   resetFilters();
@@ -130,8 +131,16 @@ advertForm.addEventListener('submit', (evt)=>{
   if(isValid){
     blockSubmit();
     const formData = new FormData(evt.target);
-    sendForm(formData,unblockSubmit);
-    setDefaultStatus();
+    sendForm(
+      formData,
+      ()=>{
+        setDefaultStatus();
+        unblockSubmit();
+      },
+      ()=>{
+        unblockSubmit();
+      }
+    );
   }
 });
 

@@ -20,7 +20,7 @@ const getData = (onSuccess, onError) =>()=>{
     });
 };
 
-const sendForm = (data, onSuccess)=>{
+const sendForm = (data, onSuccess, onError)=>{
   fetch('https://27.javascript.pages.academy/keksobooking',
     {
       method: 'POST',
@@ -34,6 +34,7 @@ const sendForm = (data, onSuccess)=>{
       throw new Error(`${response.status} ${response.statusText}`);}
   })
     .catch((err)=>{
+      onError();
       showServerError(err.message, 'sendForm');
     });
 };
