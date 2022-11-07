@@ -1,10 +1,8 @@
-import { activateFilters } from './map-filters.js';
-import {showServerError, showServerSucccess} from'./messages.js';
-const ADVERTISMENTS_AMOUNT = 10;
-
+const LOAD_DATA_ADDRESS = 'https://27.javascript.pages.academy/keksobooking/data';
+const SEND_FORM_ADDRESS = 'https://27.javascript.pages.academy/keksobooking/';
 
 const getData = (onSuccess, onError) =>()=>{
-  fetch('https://27.javascript.pages.academy/keksobooking/data')
+  fetch(LOAD_DATA_ADDRESS)
     .then((response)=>{
       if(response.ok){
         return response.json();
@@ -12,8 +10,7 @@ const getData = (onSuccess, onError) =>()=>{
       throw new Error(`${response.status} ${response.statusText}`);
     })
     .then((data)=>{
-      onSuccess(data.slice(0, ADVERTISMENTS_AMOUNT));
-      activateFilters();
+      onSuccess(data);
     })
     .catch((err)=>{
       onError(err.message, 'loadData');
@@ -21,7 +18,7 @@ const getData = (onSuccess, onError) =>()=>{
 };
 
 const sendForm = (data, onSuccess, onError)=>{
-  fetch('https://27.javascript.pages.academy/keksobooking',
+  fetch(SEND_FORM_ADDRESS,
     {
       method: 'POST',
       body: data,
@@ -29,13 +26,11 @@ const sendForm = (data, onSuccess, onError)=>{
   ).then((response)=>{
     if(response.ok){
       onSuccess();
-      showServerSucccess();
     }else{
       throw new Error(`${response.status} ${response.statusText}`);}
   })
     .catch((err)=>{
-      onError();
-      showServerError(err.message, 'sendForm');
+      onError(err);
     });
 };
 

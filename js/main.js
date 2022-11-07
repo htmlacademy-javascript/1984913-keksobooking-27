@@ -1,10 +1,14 @@
 import {renderAdverts, renderMap} from'./map.js';
 import { activateForm, disableForm } from './form.js';
-import { disableFilters } from './map-filters.js';
+import { activateFilters, disableFilters } from './map-filters.js';
 import {getData} from './server.js';
 import { showServerError } from './messages.js';
 
-const createAdverts = getData(renderAdverts, showServerError);
+const createAdverts = getData((adverts)=>{
+  renderAdverts(adverts);
+  activateFilters();
+},
+showServerError);
 
 disableForm();
 disableFilters();

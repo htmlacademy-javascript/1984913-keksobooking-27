@@ -1,48 +1,46 @@
 const errorMessage = document.querySelector('#error').content.querySelector('.error');
 const successMessage = document.querySelector('#success').content.querySelector('.success');
+const loadError = document.querySelector('.load-error');
 let currentMessage;
+
 const showLoadError = (error)=>{
-  const errorBlock = document.querySelector('.server-error');
-  errorBlock.querySelector('.server-error__code').textContent = error;
-  errorBlock.classList.remove('visually-hidden');
+  loadError.querySelector('.load-error__code').textContent = error;
+  loadError.classList.remove('visually-hidden');
 };
 
-const closeMessageOnEscape = (evt)=>{
+const onMessageClick = ()=>{
+  currentMessage.remove();
+  document.removeEventListener('click', onMessageClick);
+};
+
+const onMessageEscKeydown = (evt)=>{
   if(evt.key === 'Escape'){
     currentMessage.remove();
+    document.removeEventListener('keydown', onMessageEscKeydown);
   }
 };
 
-const closeMessageOnClick = ()=>{
+const onErrorButtonClick = ()=>{
   currentMessage.remove();
-};
-
-const closeMessage = (evt)=>{
-  if(evt.type === 'click'){
-    closeMessageOnClick();
-  }else{
-    closeMessageOnEscape(evt);
-  }
-  document.removeEventListener('click', closeMessage);
-  document.removeEventListener('keydown', closeMessage);
+  document.removeEventListener('click', onMessageClick);
+  document.removeEventListener('keydown', onMessageEscKeydown);
 };
 
 const showFormMessage = (type)=>{
   currentMessage = type === 'error' ? errorMessage : successMessage;
   document.body.append(currentMessage);
-  document.addEventListener('click', closeMessage);
-  document.addEventListener('keydown', closeMessage);
+  document.addEventListener('click', onMessageClick);
+  document.addEventListener('keydown', onMessageEscKeydown);
   if(type === 'error'){
-    document.querySelector('.error__button').addEventListener('click', closeMessage);
+    document.querySelector('.error__button').addEventListener('click', onErrorButtonClick);
   }
 };
 
-const showServerError = (error, type )=>{
+const showServerError = (error, type)=>{
   if(type === 'loadData'){
     showLoadError(error);
   }else{
     showFormMessage('error');
-
   }
 };
 

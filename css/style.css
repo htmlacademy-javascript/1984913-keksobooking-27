@@ -1049,7 +1049,7 @@ fieldset {
   display: none;
 }
 
-.server-error{
+.load-error{
   display: flex;
   flex-direction: column;
   align-self: center;
@@ -1059,6 +1059,6 @@ fieldset {
   color: #ff5635;
   border: 2px solid #ff5635;
 }
-.server-error>p{
+.load-error>p{
   margin: 5px 0;
 }

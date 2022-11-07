@@ -1,5 +1,5 @@
 import { createCard } from './card.js';
-
+const ADVERTISEMENTS_AMOUNT = 10;
 const MAIN_PIN_ICON = L.icon({
   iconUrl:'../img/main-pin.svg',
   iconSize:[52,52],
@@ -80,7 +80,7 @@ const createPin = (lat, lng, card)=>{
 };
 
 const renderAdverts = (adverts) => {
-  adverts.forEach((advert) => {
+  adverts.slice(0,ADVERTISEMENTS_AMOUNT).forEach((advert) => {
     const card = createCard(advert);
     const {lat, lng} = advert.location;
     createPin(lat, lng, card);

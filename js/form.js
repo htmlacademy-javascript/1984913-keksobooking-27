@@ -2,6 +2,7 @@ import {createSlider, updateSliderValues,updateHandlePlace, activateSlider, disa
 import {resetFilters} from './map-filters.js';
 import {resetMap} from './map.js';
 import {sendForm} from './server.js';
+import {showServerError, showServerSucccess} from'./messages.js';
 
 const MAX_PRICE = 100000;
 const roomsToMaxCapacity = {
@@ -135,9 +136,11 @@ advertForm.addEventListener('submit', (evt)=>{
       formData,
       ()=>{
         setDefaultStatus();
+        showServerSucccess();
         unblockSubmit();
       },
-      ()=>{
+      (err)=>{
+        showServerError(err.message, 'sendForm');
         unblockSubmit();
       }
     );
