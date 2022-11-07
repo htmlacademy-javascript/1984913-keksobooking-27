@@ -40,11 +40,16 @@ const updateSliderValues = (min,max)=>{
   updateHandlePlace(min);
 };
 
+const activateSlider = ()=>{
+  //  Перевод в активное состояние по noUiSlider документации
+  slider.removeAttribute('disabled');
+};
+
 const disableSlider = ()=>{
   //  Перевод в неактивное состояние по noUiSlider документации
   slider.setAttribute('disabled', true);
 };
 
 
-export {createSlider,updateSliderValues,updateHandlePlace,disableSlider};
+export {createSlider,updateSliderValues,updateHandlePlace,activateSlider, disableSlider};
 

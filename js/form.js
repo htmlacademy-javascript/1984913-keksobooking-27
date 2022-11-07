@@ -1,4 +1,4 @@
-import {createSlider, updateSliderValues,updateHandlePlace, disableSlider} from './slider.js';
+import {createSlider, updateSliderValues,updateHandlePlace, activateSlider, disableSlider} from './slider.js';
 import {resetFilters} from './map-filters.js';
 import {resetMap} from './map.js';
 import {sendForm} from './server.js';
@@ -67,6 +67,7 @@ const activateForm = ()=>{
   fields.forEach((field)=>{
     field.disabled = false;
   });
+  activateSlider();
 };
 
 const pristine = new Pristine(advertForm, {
