@@ -7,20 +7,34 @@ const showLoadError = (error)=>{
   errorBlock.classList.remove('visually-hidden');
 };
 
-// document.removeEventListener('keydown', ()=>closeMessageOnEscape());
-// document.removeEventListener('click', ()=>closeMessageOnClick());
-
-const closeMessageOnEscape = ()=>{
-  currentMessage.remove();
+const closeMessageOnEscape = (evt)=>{
+  if(evt.key === 'Escape'){
+    currentMessage.remove();
+  }
 };
 
 const closeMessageOnClick = ()=>{
   currentMessage.remove();
 };
 
+const closeMessage = (evt)=>{
+  if(evt.type === 'click'){
+    closeMessageOnClick();
+  }else{
+    closeMessageOnEscape(evt);
+  }
+  document.removeEventListener('click', closeMessage);
+  document.removeEventListener('keydown', closeMessage);
+};
+
 const showFormMessage = (type)=>{
   currentMessage = type === 'error' ? errorMessage : successMessage;
   document.body.append(currentMessage);
+  document.addEventListener('click', closeMessage);
+  document.addEventListener('keydown', closeMessage);
+  if(type === 'error'){
+    document.querySelector('.error__button').addEventListener('click', closeMessage);
+  }
 };
 
 const showServerError = (error, type )=>{
@@ -28,6 +42,7 @@ const showServerError = (error, type )=>{
     showLoadError(error);
   }else{
     showFormMessage('error');
+
   }
 };
 
@@ -35,5 +50,5 @@ const showServerSucccess = ()=>{
   showFormMessage('success');
 };
 
-export {showServerError, showServerSucccess, closeMessageOnClick, closeMessageOnEscape};
+export {showServerError, showServerSucccess};
 

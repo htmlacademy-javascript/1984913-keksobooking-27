@@ -1,5 +1,5 @@
 import { activateFilters } from './map-filters.js';
-import {showServerError, showServerSucccess, closeMessageOnClick, closeMessageOnEscape} from'./messages.js';
+import {showServerError, showServerSucccess} from'./messages.js';
 const ADVERTISMENTS_AMOUNT = 10;
 
 
@@ -30,18 +30,12 @@ const sendForm = (data, onSuccess)=>{
     if(response.ok){
       onSuccess();
       showServerSucccess();
-      document.addEventListener('click', ()=>closeMessageOnClick());
-      document.addEventListener('keydown', ()=>closeMessageOnEscape());
-
     }else{
       throw new Error(`${response.status} ${response.statusText}`);}
   })
     .catch((err)=>{
       showServerError(err.message, 'sendForm');
-      document.addEventListener('click', ()=>closeMessageOnClick());
-      document.addEventListener('keydown', ()=>closeMessageOnEscape());
     });
-
 };
 
 export {getData, sendForm};
