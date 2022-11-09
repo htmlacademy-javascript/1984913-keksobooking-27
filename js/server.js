@@ -9,9 +9,7 @@ const getData = (onSuccess, onError) =>()=>{
       }
       throw new Error(`${response.status} ${response.statusText}`);
     })
-    .then((data)=>{
-      onSuccess(data);
-    })
+    .then(onSuccess)
     .catch((err)=>{
       onError(err.message, 'loadData');
     });
@@ -29,9 +27,7 @@ const sendForm = (data, onSuccess, onError)=>{
     }else{
       throw new Error(`${response.status} ${response.statusText}`);}
   })
-    .catch((err)=>{
-      onError(err);
-    });
+    .catch(onError);
 };
 
 export {getData, sendForm};

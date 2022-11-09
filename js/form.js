@@ -30,11 +30,11 @@ const submitButton = advertForm.querySelector('button[type=submit]');
 
 addressField.readOnly = true;
 
-const handlePriceFields = (value)=>{
-  const currentType = value || defaultType;
-  priceField.placeholder = typeToMinPrice[currentType];
-  updateSliderValues( typeToMinPrice[currentType],MAX_PRICE);
-  updateHandlePlace(typeToMinPrice[currentType]);
+const handlePriceFields = (value = defaultType)=>{
+  const minPrice = typeToMinPrice[value];
+  priceField.placeholder = minPrice;
+  updateSliderValues(minPrice, MAX_PRICE);
+  updateHandlePlace(minPrice);
 };
 
 createSlider(typeToMinPrice[defaultType],MAX_PRICE);
@@ -148,9 +148,12 @@ const setFormSubmit = (onSuccess)=>{
     }
   });};
 
+let handleFormReset = null;
+advertForm.addEventListener('reset', ()=>{
+  handleFormReset?.();
+});
+
 const setFormReset = (onReset)=>{
-  advertForm.addEventListener('reset', ()=>{
-    onReset();
-  });
+  handleFormReset = onReset;
 };
 export {activateForm, disableForm,handleResetForm, setFormSubmit, setFormReset};
