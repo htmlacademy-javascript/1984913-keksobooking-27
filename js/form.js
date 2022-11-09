@@ -27,20 +27,21 @@ const priceField = advertForm.querySelector('#price');
 const timeInField = advertForm.querySelector('#timein');
 const timeOutField = advertForm.querySelector('#timeout');
 const submitButton = advertForm.querySelector('button[type=submit]');
-
 addressField.readOnly = true;
 
-const handlePriceFields = (value = defaultType)=>{
+const handlePriceFields = (value = defaultType, price)=>{
   const minPrice = typeToMinPrice[value];
   priceField.placeholder = minPrice;
   updateSliderValues(minPrice, MAX_PRICE);
-  updateHandlePlace(minPrice);
+  if(price){
+    updateHandlePlace(price);
+  }
 };
 
 createSlider(typeToMinPrice[defaultType],MAX_PRICE);
 
 const handleTypeChange = (evt) =>{
-  handlePriceFields(evt.target.value);
+  handlePriceFields(evt.target.value, +priceField.value);
 };
 
 typeField.addEventListener('change', (evt)=>handleTypeChange(evt));
