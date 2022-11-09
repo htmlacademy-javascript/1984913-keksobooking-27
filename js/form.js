@@ -1,6 +1,4 @@
 import {createSlider, updateSliderValues,updateHandlePlace, activateSlider, disableSlider} from './slider.js';
-import {resetFilters} from './map-filters.js';
-import {resetMap} from './map.js';
 import {sendForm} from './server.js';
 import {showServerError, showServerSucccess} from'./messages.js';
 
@@ -32,12 +30,17 @@ const submitButton = advertForm.querySelector('button[type=submit]');
 
 addressField.readOnly = true;
 
-priceField.placeholder = typeToMinPrice[defaultType];
+const handlePriceFields = (value)=>{
+  const currentType = value || defaultType;
+  priceField.placeholder = typeToMinPrice[currentType];
+  updateSliderValues( typeToMinPrice[currentType],MAX_PRICE);
+  updateHandlePlace(typeToMinPrice[currentType]);
+};
+
 createSlider(typeToMinPrice[defaultType],MAX_PRICE);
 
 const handleTypeChange = (evt) =>{
-  priceField.placeholder = typeToMinPrice[evt.target.value];
-  updateSliderValues( typeToMinPrice[evt.target.value],MAX_PRICE);
+  handlePriceFields(evt.target.value);
 };
 
 typeField.addEventListener('change', (evt)=>handleTypeChange(evt));
@@ -65,6 +68,7 @@ const disableForm = ()=>{
 
 const activateForm = ()=>{
   advertForm.classList.remove('ad-form--disabled');
+  handlePriceFields();
   fields.forEach((field)=>{
     field.disabled = false;
   });
@@ -77,7 +81,6 @@ const pristine = new Pristine(advertForm, {
   errorTextParent: 'ad-form__element',
   errorTextClass: 'text-help',
 });
-
 
 const validateRoomsCapacity = ()=>{
   const rooms = +roomsField.value;
@@ -118,37 +121,36 @@ const unblockSubmit = ()=>{
   submitButton.textContent = 'Опубликовать';
 };
 
-const setDefaultStatus = ()=>{
+const handleResetForm = ()=>{
   advertForm.reset();
-  updateHandlePlace(typeToMinPrice[typeField.value]);
-  resetMap();
-  resetFilters();
-  priceField.placeholder = typeToMinPrice[defaultType];
+  handlePriceFields();
 };
 
-advertForm.addEventListener('submit', (evt)=>{
-  evt.preventDefault();
-  const isValid = pristine.validate();
-  if(isValid){
-    blockSubmit();
-    const formData = new FormData(evt.target);
-    sendForm(
-      formData,
-      ()=>{
-        setDefaultStatus();
-        showServerSucccess();
-        unblockSubmit();
-      },
-      (err)=>{
-        showServerError(err.message, 'sendForm');
-        unblockSubmit();
-      }
-    );
-  }
-});
+const setFormSubmit = (onSuccess)=>{
+  advertForm.addEventListener('submit', (evt)=>{
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if(isValid){
+      blockSubmit();
+      const formData = new FormData(evt.target);
+      sendForm(
+        formData,
+        ()=>{
+          onSuccess();
+          showServerSucccess();
+          unblockSubmit();
+        },
+        (err)=>{
+          showServerError(err.message, 'sendForm');
+          unblockSubmit();
+        }
+      );
+    }
+  });};
 
-advertForm.addEventListener('reset', ()=>{
-  setDefaultStatus();
-});
-
-export {activateForm, disableForm};
+const setFormReset = (onReset)=>{
+  advertForm.addEventListener('reset', ()=>{
+    onReset();
+  });
+};
+export {activateForm, disableForm,handleResetForm, setFormSubmit, setFormReset};

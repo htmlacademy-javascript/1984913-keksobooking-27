@@ -8,12 +8,6 @@ const showLoadError = (error)=>{
   loadError.classList.remove('visually-hidden');
 };
 
-const closeMessage = ()=>{
-  currentMessage.remove();
-  // document.removeEventListener('click', onMessageClick);
-  // document.removeEventListener('keydown', onMessageEscKeydown);
-};
-
 const onMessageClick = ()=>{
   closeMessage();
 };
@@ -27,6 +21,12 @@ const onMessageEscKeydown = (evt)=>{
 const onErrorButtonClick = ()=>{
   closeMessage();
 };
+
+function closeMessage (){
+  currentMessage.remove();
+  document.removeEventListener('click', onMessageClick);
+  document.removeEventListener('keydown', onMessageEscKeydown);
+}
 
 const showFormMessage = (type)=>{
   currentMessage = type === 'error' ? errorMessage : successMessage;
