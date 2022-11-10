@@ -1,9 +1,9 @@
-import {createSlider, updateSliderValues,updateHandlePlace, disableSlider} from './slider.js';
-import {resetFilters} from './map-filters.js';
-import {resetMap} from './map.js';
+import {createSlider, updateSliderValues,updateHandlePlace, activateSlider, disableSlider} from './slider.js';
+import {sendForm} from './server.js';
+import {showServerError, showServerSucccess} from'./messages.js';
 
 const MAX_PRICE = 100000;
-const roomsMaxCapacity = {
+const roomsToMaxCapacity = {
   1: 1,
   2: 2,
   3: 3,
@@ -26,15 +26,22 @@ const defaultType = typeField.options[typeField.selectedIndex].value;
 const priceField = advertForm.querySelector('#price');
 const timeInField = advertForm.querySelector('#timein');
 const timeOutField = advertForm.querySelector('#timeout');
-
+const submitButton = advertForm.querySelector('button[type=submit]');
 addressField.readOnly = true;
 
-priceField.placeholder = typeToMinPrice[defaultType];
+const handlePriceFields = (value = defaultType, price)=>{
+  const minPrice = typeToMinPrice[value];
+  priceField.placeholder = minPrice;
+  updateSliderValues(minPrice, MAX_PRICE);
+  if(price){
+    updateHandlePlace(price);
+  }
+};
+
 createSlider(typeToMinPrice[defaultType],MAX_PRICE);
 
 const handleTypeChange = (evt) =>{
-  priceField.placeholder = typeToMinPrice[evt.target.value];
-  updateSliderValues( typeToMinPrice[evt.target.value],MAX_PRICE);
+  handlePriceFields(evt.target.value, +priceField.value);
 };
 
 typeField.addEventListener('change', (evt)=>handleTypeChange(evt));
@@ -62,9 +69,11 @@ const disableForm = ()=>{
 
 const activateForm = ()=>{
   advertForm.classList.remove('ad-form--disabled');
+  handlePriceFields();
   fields.forEach((field)=>{
     field.disabled = false;
   });
+  activateSlider();
 };
 
 const pristine = new Pristine(advertForm, {
@@ -74,18 +83,17 @@ const pristine = new Pristine(advertForm, {
   errorTextClass: 'text-help',
 });
 
-
 const validateRoomsCapacity = ()=>{
   const rooms = +roomsField.value;
   const capacity = +capacityField.value;
-  return capacity <= roomsMaxCapacity[rooms];
+  return capacity <= roomsToMaxCapacity[rooms];
 
 };
 
 const getCapacityError = ()=>{
   const rooms = +roomsField.value;
-  return roomsMaxCapacity[rooms] > 0
-    ? `Количество не может превышать  ${roomsMaxCapacity[rooms]}`
+  return roomsToMaxCapacity[rooms] > 0
+    ? `Количество не может превышать  ${roomsToMaxCapacity[rooms]}`
     : 'Не предусмотрено для гостей';
 };
 
@@ -104,21 +112,49 @@ const getPriceError = ()=>{
 pristine.addValidator(capacityField, validateRoomsCapacity, getCapacityError);
 pristine.addValidator(priceField, validatePrice, getPriceError);
 
-const setDefaultStatus = ()=>{
-  updateHandlePlace(typeToMinPrice[typeField.value]);
-  resetMap();
-  resetFilters();
-  priceField.placeholder = typeToMinPrice[defaultType];
+const blockSubmit = ()=>{
+  submitButton.disabled = true;
+  submitButton.textContent = 'Отправка...';
 };
 
-advertForm.addEventListener('submit', (evt)=>{
-  evt.preventDefault();
-  pristine.validate();
-  setDefaultStatus();
-});
+const unblockSubmit = ()=>{
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
 
+const handleResetForm = ()=>{
+  advertForm.reset();
+  handlePriceFields();
+};
+
+const setFormSubmit = (onSuccess)=>{
+  advertForm.addEventListener('submit', (evt)=>{
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if(isValid){
+      blockSubmit();
+      const formData = new FormData(evt.target);
+      sendForm(
+        formData,
+        ()=>{
+          onSuccess();
+          showServerSucccess();
+          unblockSubmit();
+        },
+        (err)=>{
+          showServerError(err.message, 'sendForm');
+          unblockSubmit();
+        }
+      );
+    }
+  });};
+
+let handleFormReset = null;
 advertForm.addEventListener('reset', ()=>{
-  setDefaultStatus();
+  handleFormReset?.();
 });
 
-export {activateForm, disableForm};
+const setFormReset = (onReset)=>{
+  handleFormReset = onReset;
+};
+export {activateForm, disableForm,handleResetForm, setFormSubmit, setFormReset};
