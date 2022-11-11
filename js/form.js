@@ -1,7 +1,7 @@
 import {createSlider, updateSliderValues,updateHandlePlace, activateSlider, disableSlider} from './slider.js';
 import {sendForm} from './server.js';
 import {showServerError, showServerSucccess} from'./messages.js';
-
+import { resetPhotoFields } from './photos.js';
 const MAX_PRICE = 100000;
 const roomsToMaxCapacity = {
   1: 1,
@@ -125,6 +125,7 @@ const unblockSubmit = ()=>{
 const handleResetForm = ()=>{
   advertForm.reset();
   handlePriceFields();
+  resetPhotoFields();
 };
 
 const setFormSubmit = (onSuccess)=>{
