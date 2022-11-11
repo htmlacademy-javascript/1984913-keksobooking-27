@@ -1,4 +1,5 @@
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+const DEFAULT_AVATAR = 'img/muffin-grey.svg';
 const avatarField = document.querySelector('.ad-form__field input[type=file]');
 const avatarPreview = document.querySelector('.ad-form-header__preview img');
 const photoField = document.querySelector('.ad-form__upload input[type=file]');
@@ -23,6 +24,7 @@ const createPhotoElement = (file)=>{
 };
 
 photoField.addEventListener('change', ()=>{
+  photoPreview.innerHTML = '';
   const photo = photoField.files[0];
   const isValid = checkValidType(photo);
   if(isValid){
@@ -31,8 +33,8 @@ photoField.addEventListener('change', ()=>{
 });
 
 const resetPhotoFields = ()=>{
-  avatarPreview.src = '../img/muffin-grey.svg';
-  photoPreview.querySelectorAll('img').forEach((photo)=>photo.remove());
+  avatarPreview.src = DEFAULT_AVATAR;
+  photoPreview.innerHTML = '';
 };
 
 export {
