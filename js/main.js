@@ -3,11 +3,12 @@ import { activateForm, disableForm,handleResetForm, setFormSubmit, setFormReset 
 import { activateFilters, disableFilters, resetFilters, setFilterChange } from './map-filters.js';
 import {getData} from './server.js';
 import { showServerError } from './messages.js';
+import { debounce } from './utils.js';
 
 const createAdverts = getData((adverts)=>{
   renderAdverts(adverts);
   activateFilters();
-  setFilterChange(()=>renderAdverts(adverts));
+  setFilterChange(debounce(()=>renderAdverts(adverts)));
 },
 showServerError);
 

@@ -6,6 +6,7 @@ const typeFilter = filtersForm.querySelector('#housing-type');
 const priceFilter = filtersForm.querySelector('#housing-price');
 const roomsFilter = filtersForm.querySelector('#housing-rooms');
 const guestsFilter = filtersForm.querySelector('#housing-guests');
+const featuresFilter = filtersForm.querySelectorAll('.map__checkbox');
 
 const resetFilters = ()=>{
   filtersForm.reset();
@@ -59,13 +60,33 @@ const filterByGuests = (advert)=>{
   return true;
 };
 
-const handleFilterAdverts = (advert)=>filterByType(advert) && filterByPrice(advert) && filterByRooms(advert) && filterByGuests(advert);
+const getCheckedFeatures = ()=>{
+  const checkedFeatures = [];
+  featuresFilter.forEach((feature)=> {
+    if(feature.checked){
+      checkedFeatures.push(feature.value);
+    }
+  });
+  return checkedFeatures;
+};
+
+const filterByFeatures = (advert)=>{
+  const advertFeatures = advert.offer.features;
+  const features = getCheckedFeatures();
+  if(features.length > 0 && advertFeatures === undefined){
+    return false;
+  }
+  return features.every((feature)=>advertFeatures.includes(feature));
+};
+
+const handleFilterAdverts = (advert)=>filterByType(advert) && filterByPrice(advert) && filterByRooms(advert) && filterByGuests(advert) && filterByFeatures(advert);
 
 const setFilterChange = (renderAdverts)=>{
   typeFilter.addEventListener('change',()=>renderAdverts());
   priceFilter.addEventListener('change',()=>renderAdverts());
   roomsFilter.addEventListener('change',()=>renderAdverts());
   guestsFilter.addEventListener('change',()=>renderAdverts());
+  featuresFilter.forEach((feature)=> feature.addEventListener('click', ()=>renderAdverts()));
 };
 
 export {resetFilters, activateFilters, disableFilters, setFilterChange, handleFilterAdverts};
