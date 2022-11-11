@@ -1,3 +1,5 @@
+import { disableItem, enableItem } from './utils.js';
+
 const LOW_PRICE_MAX = 10000;
 const HIGH_PRICE_MIN = 50000;
 const filtersForm = document.querySelector('.map__filters');
@@ -14,17 +16,13 @@ const resetFilters = ()=>{
 
 const disableFilters = ()=>{
   filtersForm.classList.add('map__filters--disabled');
-  filters.forEach((filter)=>{
-    filter.disabled = true;
-  });
+  filters.forEach(disableItem);
   resetFilters();
 };
 
 const activateFilters = ()=>{
   filtersForm.classList.remove('map__filters--disabled');
-  filters.forEach((filter)=>{
-    filter.disabled = false;
-  });
+  filters.forEach(enableItem);
 };
 
 const filterByType = (advert)=>{
