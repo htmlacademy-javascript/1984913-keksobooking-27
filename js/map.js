@@ -82,7 +82,8 @@ const createPin = (lat, lng, card)=>{
 
 const renderAdverts = (adverts) => {
   pinsLayer.clearLayers();
-  adverts.filter(handleFilterAdverts).slice(0,ADVERTISEMENTS_AMOUNT).forEach((advert) => {
+  const filteredAdverts = handleFilterAdverts(adverts, ADVERTISEMENTS_AMOUNT);
+  filteredAdverts.forEach((advert) => {
     const card = createCard(advert);
     const {lat, lng} = advert.location;
     createPin(lat, lng, card);

@@ -77,7 +77,22 @@ const filterByFeatures = (advert)=>{
   return features.every((feature)=>advertFeatures.includes(feature));
 };
 
-const handleFilterAdverts = (advert)=>filterByType(advert) && filterByPrice(advert) && filterByRooms(advert) && filterByGuests(advert) && filterByFeatures(advert);
+const handleFilterAdverts = (adverts, max)=>{
+  const validAdverts = [];
+  for(const advert of adverts){
+    if(validAdverts.length >= max){
+      break;
+    }
+    if(filterByType(advert) &&
+       filterByPrice(advert) &&
+       filterByRooms(advert) &&
+       filterByGuests(advert) &&
+       filterByFeatures(advert)){
+      validAdverts.push(advert);
+    }
+  }
+  return validAdverts;
+};
 
 const setFilterChange = (renderAdverts)=>{
   typeFilter.addEventListener('change',()=>renderAdverts());
