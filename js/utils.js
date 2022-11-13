@@ -1,23 +1,23 @@
-const DELAY = 500;
+const TIMEOUT_DELAY = 500;
 
-const disableItem = (item)=>{
-  item.disabled = true;
+const setDisabled = (element)=>{
+  element.disabled = true;
 };
 
-const enableItem = (item)=>{
-  item.disabled = false;
+const unsetDisabled = (element)=>{
+  element.disabled = false;
 };
 
 const debounce = (callback) =>{
   let timeoutId;
   return (...rest) => {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback.apply(this, rest), DELAY);
+    timeoutId = setTimeout(callback, TIMEOUT_DELAY, ...rest);
   };
 };
 
 export{
   debounce,
-  disableItem,
-  enableItem
+  setDisabled,
+  unsetDisabled
 };

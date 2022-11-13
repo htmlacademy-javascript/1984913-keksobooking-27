@@ -1,7 +1,7 @@
 import {createSlider, updateSliderValues,updateHandlePlace, activateSlider, disableSlider} from './slider.js';
 import {sendForm} from './server.js';
 import {showServerError, showServerSucccess} from'./messages.js';
-import { disableItem, enableItem } from './utils.js';
+import { setDisabled, unsetDisabled } from './utils.js';
 
 const MAX_PRICE = 100000;
 const roomsToMaxCapacity = {
@@ -61,7 +61,7 @@ timeOutField.addEventListener('change', () => {
 
 const disableForm = ()=>{
   advertForm.classList.add('ad-form--disabled');
-  fields.forEach(disableItem);
+  fields.forEach(setDisabled);
   disableSlider();
   advertForm.reset();
 };
@@ -69,7 +69,7 @@ const disableForm = ()=>{
 const activateForm = ()=>{
   advertForm.classList.remove('ad-form--disabled');
   handlePriceFields();
-  fields.forEach(enableItem);
+  fields.forEach(unsetDisabled);
   activateSlider();
 };
 
@@ -110,12 +110,12 @@ pristine.addValidator(capacityField, validateRoomsCapacity, getCapacityError);
 pristine.addValidator(priceField, validatePrice, getPriceError);
 
 const blockSubmit = ()=>{
-  disableItem(submitButton);
+  setDisabled(submitButton);
   submitButton.textContent = 'Отправка...';
 };
 
 const unblockSubmit = ()=>{
-  enableItem(submitButton);
+  unsetDisabled(submitButton);
   submitButton.textContent = 'Опубликовать';
 };
 
