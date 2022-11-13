@@ -46,23 +46,21 @@ const checkByGuests = (advert)=>guestsFilter.value === DEFAULT_VALUE || advert.o
 
 const getCheckedFeatures = ()=>Array.from(featuresFilter.querySelectorAll('input:checked'));
 
-const checkByFeatures = (advert)=>{
-  const advertFeatures = advert.offer.features;
+const checkByFeatures = (advertFeatures)=>{
   const features = getCheckedFeatures();
-  if(features.length > 0 && advertFeatures === undefined){
-    return false;
-  }
   return features.every((feature)=>advertFeatures.includes(feature.value));
 };
 
 const handleFilterAdverts = (adverts, max)=>{
   const validAdverts = [];
   for(const advert of adverts){
+    const advertFeatures = advert.offer.features;
     if(checkByType(advert) &&
        checkByPrice(advert) &&
        checkByRooms(advert) &&
        checkByGuests(advert) &&
-       checkByFeatures(advert)){
+       advertFeatures &&
+       checkByFeatures(advertFeatures)){
       validAdverts.push(advert);
     }
     if(validAdverts.length === max){
