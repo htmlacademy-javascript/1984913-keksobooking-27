@@ -2,6 +2,7 @@ import { setDisabled, unsetDisabled } from './utils.js';
 
 const LOW_PRICE_MAX = 10000;
 const HIGH_PRICE_MIN = 50000;
+const DEFAULT_VALUE = 'any';
 const filtersForm = document.querySelector('.map__filters');
 const filters = filtersForm.querySelectorAll('fieldset, select');
 const typeFilter = filtersForm.querySelector('#housing-type');
@@ -25,12 +26,7 @@ const activateFilters = ()=>{
   filters.forEach(unsetDisabled);
 };
 
-const checkByType = (advert)=>{
-  if(typeFilter.value !== 'any'){
-    return advert.offer.type === typeFilter.value;
-  }
-  return true;
-};
+const checkByType = (advert)=>typeFilter.value === DEFAULT_VALUE || advert.offer.type === typeFilter.value;
 
 const checkByPrice = (advert)=>{
   switch (priceFilter.value){
@@ -44,19 +40,9 @@ const checkByPrice = (advert)=>{
       return true;
   }};
 
-const checkByRooms = (advert)=>{
-  if(roomsFilter.value !== 'any'){
-    return advert.offer.rooms === +roomsFilter.value;
-  }
-  return true;
-};
+const checkByRooms = (advert)=>roomsFilter.value === DEFAULT_VALUE || advert.offer.rooms === +roomsFilter.value;
 
-const checkByGuests = (advert)=>{
-  if(guestsFilter.value !== 'any'){
-    return advert.offer.guests === +guestsFilter.value;
-  }
-  return true;
-};
+const checkByGuests = (advert)=>guestsFilter.value === DEFAULT_VALUE || advert.offer.guests === +guestsFilter.value;
 
 const getCheckedFeatures = ()=>Array.from(featuresFilter.querySelectorAll('input:checked'));
 
@@ -86,8 +72,14 @@ const handleFilterAdverts = (adverts, max)=>{
   return validAdverts;
 };
 
-const setFilterChange = (renderAdverts)=>{
-  filtersForm.addEventListener('change',()=>renderAdverts());
+let handleChangeFilter = null;
+
+filtersForm.addEventListener('change',()=>{
+  handleChangeFilter?.();
+});
+
+const setFilterChange = (cb)=>{
+  handleChangeFilter = cb;
 };
 
 export {resetFilters, activateFilters, disableFilters, setFilterChange, handleFilterAdverts};
