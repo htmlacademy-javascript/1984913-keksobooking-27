@@ -1,3 +1,5 @@
+import { removeElement } from './utils.js';
+
 const propertyTypeToName = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
@@ -32,9 +34,6 @@ const renderPhotos = (container, photos) => {
   });
 };
 
-const removeEmptyField = (field)=>{
-  field.remove();
-};
 
 const createCard = (advert) => {
   const author = advert.author;
@@ -52,7 +51,7 @@ const createCard = (advert) => {
 
   card.querySelector('.popup__title').textContent = offer.title;
   card.querySelector('.popup__text--address').textContent = offer.address;
-  card.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
+  card.querySelector('.popup__text--price').firstChild.textContent = `${offer.price} `;
   card.querySelector('.popup__type').textContent = propertyTypeToName[offer.type];
   card.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
   card.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
@@ -61,19 +60,19 @@ const createCard = (advert) => {
   if(features.length > 0){
     renderFeatures(card, features);
   }else{
-    removeEmptyField(featuresContainer);
+    removeElement(featuresContainer);
   }
 
   if(photos.length > 0){
     renderPhotos(photosContainer, photos);
   } else {
-    removeEmptyField(photosContainer);
+    removeElement(photosContainer);
   }
 
   if(description){
     descriptionField.textContent = description;
   }else{
-    removeEmptyField(descriptionField);
+    removeElement(descriptionField);
   }
 
   return card;
