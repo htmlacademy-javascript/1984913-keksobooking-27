@@ -24,7 +24,10 @@ const createPhotoElement = (file)=>{
 };
 
 photoField.addEventListener('change', ()=>{
-  photoPreview.replaceChildren();
+  if( photoField.files?.length > 0){
+    photoPreview.replaceChildren();
+  }
+
   const photo = photoField.files[0];
   const isValid = checkValidType(photo);
   if(isValid){
@@ -33,7 +36,7 @@ photoField.addEventListener('change', ()=>{
 });
 const resetPhotoFields = ()=>{
   URL.revokeObjectURL(avatarPreview.src);
-  URL.revokeObjectURL(photoPreview.firstChild.src);
+  URL.revokeObjectURL(photoPreview.firstChild?.src);
   avatarPreview.src = DEFAULT_AVATAR;
   photoPreview.replaceChildren();
 };
