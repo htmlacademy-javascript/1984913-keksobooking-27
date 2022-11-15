@@ -1,4 +1,4 @@
-import {renderAdverts, renderMap, resetMap} from'./map.js';
+import {renderAdverts, renderMap, resetMap, setMapLoad} from'./map.js';
 import { activateForm, disableForm,handleResetForm, setFormSubmit, setFormReset } from './form.js';
 import { activateFilters, disableFilters, resetFilters, setFilterChange } from './map-filters.js';
 import {getData} from './server.js';
@@ -12,16 +12,20 @@ const createAdverts = getData((adverts)=>{
 },
 showServerError);
 
-disableForm();
-disableFilters();
-
-const mapLoaded = renderMap();
-
-const handleActiveState = (status)=>{
-  if(status){
-    activateForm();
-    createAdverts(); }
+const initPage = ()=>{
+  disableForm();
+  disableFilters();
+  renderMap();
 };
+
+const handleActiveState = ()=>{
+  activateForm();
+  createAdverts();
+};
+
+setMapLoad (()=>{
+  handleActiveState();
+});
 
 const setDefaultStatus = ()=>{
   handleResetForm();
@@ -32,6 +36,4 @@ const setDefaultStatus = ()=>{
 setFormSubmit(setDefaultStatus);
 setFormReset(setDefaultStatus);
 
-handleActiveState(mapLoaded);
-
-
+initPage();
