@@ -1,6 +1,7 @@
 import { createCard } from './card.js';
 import { handleFilterAdverts } from './map-filters.js';
 const ADVERTISEMENTS_AMOUNT = 10;
+const COORDINATES_DIGITS = 5;
 const MAIN_PIN_ICON = L.icon({
   iconUrl:'../img/main-pin.svg',
   iconSize:[52,52],
@@ -19,8 +20,9 @@ const TokyoCenter = {
 };
 
 const addressField = document.querySelector('#address');
+addressField.defaultValue = `${TokyoCenter.LAT}, ${TokyoCenter.LNG}`;
 
-const handleAddress = (lat, lng)=>{
+const handleAddress = ({lat, lng})=>{
   addressField.value = `${lat}, ${lng}`;
 };
 
@@ -32,17 +34,19 @@ const mainPin = L.marker({
   icon:MAIN_PIN_ICON
 });
 
-let map;
+const map = L.map('map-canvas');
 let pinsLayer;
 
 const createPinsLayer = ()=>{
   pinsLayer = L.layerGroup().addTo(map);
 };
 
+const setMapLoad = (cb) => {
+  map.on('load', cb);
+};
+
 const renderMap = ()=>{
-  map = L.map('map-canvas').on('load',()=>{
-    handleAddress(TokyoCenter.LAT,TokyoCenter.LNG );
-  }).setView({
+  map.setView({
     lat:TokyoCenter.LAT,
     lng:TokyoCenter.LNG
   },ZOOM);
@@ -56,18 +60,17 @@ const renderMap = ()=>{
 
   mainPin.addTo(map);
   createPinsLayer();
-  return map['_loaded'] || false;
 };
 
 const formatCoordinates = ({lat, lng})=>{
-  const formatedLat = lat.toFixed(5);
-  const formatedLng = lng.toFixed(5);
+  const formatedLat = lat.toFixed(COORDINATES_DIGITS);
+  const formatedLng = lng.toFixed(COORDINATES_DIGITS);
   return {lat:formatedLat, lng:formatedLng};
 };
 
 mainPin.on('move', (evt) => {
   const coordinates = formatCoordinates(evt.target.getLatLng());
-  handleAddress(coordinates.lat,coordinates.lng );
+  handleAddress(coordinates);
 });
 
 const createPin = (lat, lng, card)=>{
@@ -95,16 +98,16 @@ const resetMap = ()=>{
     lat:TokyoCenter.LAT,
     lng:TokyoCenter.LNG
   });
-  if(map){
-    map.closePopup();
-    map.setView({
-      lat:TokyoCenter.LAT,
-      lng:TokyoCenter.LNG
-    },ZOOM);}
+  map.closePopup();
+  map.setView({
+    lat:TokyoCenter.LAT,
+    lng:TokyoCenter.LNG
+  },ZOOM);
 };
 
 export {
   renderAdverts,
   renderMap,
-  resetMap
+  resetMap,
+  setMapLoad
 };

@@ -8,6 +8,10 @@ const unsetDisabled = (element)=>{
   element.disabled = false;
 };
 
+const removeElement = (element) =>{
+  element.remove();
+};
+
 const debounce = (callback) =>{
   let timeoutId;
   return (...rest) => {
@@ -19,5 +23,6 @@ const debounce = (callback) =>{
 export{
   debounce,
   setDisabled,
-  unsetDisabled
+  unsetDisabled,
+  removeElement
 };
